@@ -1,0 +1,65 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>프리플랍 GTO 트레이너</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<div class="room">
+<div class="app">
+  <header>
+    <p class="eyebrow">PREFLOP DRILL</p>
+    <h1>프리플랍 GTO 트레이너</h1>
+    <div class="settings">
+      <label class="field">
+        <span>테이블 인원</span>
+        <select id="tableSize">
+          <option value="2">2 · 헤즈업</option>
+          <option value="3">3</option>
+          <option value="4">4</option>
+          <option value="5">5</option>
+          <option value="6" selected>6 · 6-max</option>
+          <option value="7">7</option>
+          <option value="8">8</option>
+          <option value="9">9 · 풀링</option>
+        </select>
+      </label>
+      <label class="field check"><input type="checkbox" id="allowOpen" checked><span>오픈 상황</span></label>
+      <label class="field check"><input type="checkbox" id="allowFacing" checked><span>오픈 대응 상황</span></label>
+      <button id="resetStats" type="button">기록 초기화</button>
+    </div>
+  </header>
+
+  <div class="stats">
+    <span class="stat"><b id="statTotal">0</b><label>문제</label></span>
+    <span class="stat"><b id="statCorrect">0</b><label>정답</label></span>
+    <span class="stat"><b id="statAccuracy">0%</b><label>정답률</label></span>
+    <span class="stat"><b id="statStreak">0</b><label>연속</label></span>
+    <span class="stat"><b id="statBestStreak">0</b><label>최고연속</label></span>
+  </div>
+
+  <div class="felt">
+    <div id="seatStrip" class="seat-strip"></div>
+    <div id="scenarioText" class="scenario-text"></div>
+    <div class="cards" id="cards"></div>
+  </div>
+
+  <div class="actions">
+    <button class="action-btn fold" data-action="fold" type="button"><span class="glyph">✕</span>폴드 <kbd>F</kbd></button>
+    <button class="action-btn call" data-action="call" type="button"><span class="glyph">=</span>콜 <kbd>C</kbd></button>
+    <button class="action-btn raise" data-action="raise" type="button"><span class="glyph">↑</span>레이즈 <kbd>R</kbd></button>
+  </div>
+
+  <div id="feedback" class="feedback hidden"></div>
+
+  <footer>
+    <small>※ 레인지는 실제 솔버 결과가 아니라, 포지션/액션에 따른 일반적인 GTO 경향을 반영한 근사 모델입니다. 학습 참고용으로 사용하세요.</small>
+  </footer>
+</div>
+</div>
+<script src="ranges.js"></script>
+<script src="app.js"></script>
+</body>
+</html>
