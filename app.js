@@ -9,7 +9,8 @@ const state = {
   locked: false,
 };
 
-let nextTimer = null;
+let countdownTimer = null;
+const AUTO_ADVANCE_SECONDS = 3;
 
 function loadStats() {
   try {
@@ -78,7 +79,7 @@ function scenarioDescription(scenario) {
 }
 
 function newQuestion() {
-  clearTimeout(nextTimer);
+  clearInterval(countdownTimer);
   state.locked = false;
   document.getElementById('feedback').classList.add('hidden');
   document.querySelectorAll('.action-btn').forEach((b) => { b.disabled = false; });
@@ -120,11 +121,33 @@ function handleAction(action) {
   fb.classList.remove('hidden');
   fb.classList.toggle('correct', isCorrect);
   fb.classList.toggle('incorrect', !isCorrect);
-  fb.innerHTML = isCorrect
+  fb.innerHTML = (isCorrect
     ? `<div class="fb-result">정답입니다! ✅</div><div class="fb-reason">${correct.reason}</div>`
-    : `<div class="fb-result">오답입니다 ❌ (정답: ${ACTION_LABEL[correct.action]})</div><div class="fb-reason">${correct.reason}</div>`;
+    : `<div class="fb-result">오답입니다 ❌ (정답: ${ACTION_LABEL[correct.action]})</div><div class="fb-reason">${correct.reason}</div>`)
+    + `<div class="fb-footer"><span id="fbCountdown"></span><button id="nextBtn" type="button">다음 문제 →</button></div>`;
 
-  nextTimer = setTimeout(newQuestion, 1400);
+  document.getElementById('nextBtn').addEventListener('click', (e) => {
+    e.stopPropagation();
+    advanceNow();
+  });
+
+  startCountdown();
+}
+
+function startCountdown() {
+  let remaining = AUTO_ADVANCE_SECONDS;
+  const el = document.getElementById('fbCountdown');
+  const render = () => { el.textContent = `${remaining}초 후 다음 문제`; };
+  render();
+  clearInterval(countdownTimer);
+  countdownTimer = setInterval(() => {
+    remaining -= 1;
+    if (remaining <= 0) {
+      newQuestion();
+      return;
+    }
+    render();
+  }, 1000);
 }
 
 function advanceNow() {

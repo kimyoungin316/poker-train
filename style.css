@@ -346,6 +346,36 @@ button:focus-visible {
   color: var(--parchment-dim);
 }
 
+.fb-footer {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  margin-top: 10px;
+}
+
+#fbCountdown {
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  letter-spacing: 0.04em;
+  color: var(--stone);
+  font-variant-numeric: tabular-nums;
+}
+
+#nextBtn {
+  font-family: var(--font-body);
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: var(--felt-950);
+  background: var(--brass-bright);
+  border: none;
+  border-radius: 8px;
+  padding: 6px 14px;
+  cursor: pointer;
+}
+
+#nextBtn:hover { background: var(--brass); }
+
 footer {
   text-align: center;
   font-size: 0.7rem;
