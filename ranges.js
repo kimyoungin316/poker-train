@@ -180,7 +180,7 @@ function generateScenario(tableSize, allowOpen, allowFacing) {
 function decideCorrectAction(scenario, percentile, handKey) {
   if (scenario.type === 'open') {
     const rfi = getEffectiveRFI(scenario.tableSize, scenario.heroPos);
-    const guideline = `${POS_LABEL[scenario.heroPos]} 행동지침 — 상위 ${rfi}% 이내: 레이즈 / 그 외: 폴드`;
+    const guideline = `행동지침(레이즈,폴드)— ${rfi}% , 100%`;
     if (percentile <= rfi) {
       return { action: 'raise', reason: `${POS_LABEL[scenario.heroPos]} 오픈 레인지 상위 ${rfi}% 이내 → 레이즈`, guideline };
     }
@@ -190,7 +190,7 @@ function decideCorrectAction(scenario, percentile, handKey) {
   const { continuePct, threeBetShare } = getDefendParams(scenario.tableSize, scenario.openerPos, scenario.heroPos);
   const nThreeBet = continuePct * threeBetShare / 100;
   const valueCutoff = nThreeBet * 0.6;
-  const guideline = `${POS_LABEL[scenario.openerPos]} 오픈 대비 ${POS_LABEL[scenario.heroPos]} 행동지침 — 상위 ${valueCutoff.toFixed(1)}% 이내: 3벳(밸류) / 블러프 후보 핸드는 상위 ${continuePct}%까지 3벳 가능 / 상위 ${continuePct}% 이내: 콜 / 그 외: 폴드`;
+  const guideline = `행동지침(벳,콜,폴드)— ${valueCutoff.toFixed(1)}% , ${continuePct}% , 100%`;
   if (percentile > continuePct) {
     return { action: 'fold', reason: `${POS_LABEL[scenario.openerPos]} 오픈 대비 대응 레인지(상위 ${continuePct}%) 밖 → 폴드`, guideline };
   }

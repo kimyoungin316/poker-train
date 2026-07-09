@@ -99,8 +99,6 @@ function newQuestion() {
   renderCards(hand);
 }
 
-const ACTION_LABEL = { fold: '폴드', call: '콜', raise: '레이즈' };
-
 function handleAction(action) {
   if (state.locked || !state.current) return;
   state.locked = true;
@@ -125,9 +123,7 @@ function handleAction(action) {
   fb.classList.toggle('correct', isCorrect);
   fb.classList.toggle('incorrect', !isCorrect);
   const { key, percentile } = state.current;
-  fb.innerHTML = (isCorrect
-    ? `<div class="fb-result">정답입니다! ✅</div><div class="fb-reason">${correct.reason}</div>`
-    : `<div class="fb-result">오답입니다 ❌ (정답: ${ACTION_LABEL[correct.action]})</div><div class="fb-reason">${correct.reason}</div>`)
+  fb.innerHTML = `<div class="fb-reason">${correct.reason}</div>`
     + `<div class="fb-percentile">내 핸드 ${key} — 상위 ${percentile.toFixed(1)}%</div>`
     + `<div class="fb-guideline">${correct.guideline}</div>`
     + `<div class="fb-footer"><span id="fbCountdown"></span><button id="pauseBtn" type="button">일시정지 ⏸</button><button id="nextBtn" type="button">다음 문제 →</button></div>`;
