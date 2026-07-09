@@ -346,6 +346,22 @@ button:focus-visible {
   color: var(--parchment-dim);
 }
 
+.fb-percentile {
+  font-family: var(--font-mono);
+  font-size: 0.74rem;
+  color: var(--brass-bright);
+  margin-top: 6px;
+  font-variant-numeric: tabular-nums;
+}
+
+.fb-guideline {
+  font-family: var(--font-body);
+  font-size: 0.76rem;
+  color: var(--parchment-dim);
+  margin-top: 4px;
+  line-height: 1.4;
+}
+
 .fb-footer {
   display: flex;
   align-items: center;
@@ -375,6 +391,20 @@ button:focus-visible {
 }
 
 #nextBtn:hover { background: var(--brass); }
+
+#pauseBtn {
+  font-family: var(--font-body);
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: var(--parchment);
+  background: transparent;
+  border: 1px solid rgba(201, 162, 75, 0.4);
+  border-radius: 8px;
+  padding: 6px 12px;
+  cursor: pointer;
+}
+
+#pauseBtn:hover { border-color: var(--brass); color: var(--brass-bright); }
 
 footer {
   text-align: center;

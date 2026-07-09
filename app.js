@@ -10,7 +10,9 @@ const state = {
 };
 
 let countdownTimer = null;
-const AUTO_ADVANCE_SECONDS = 3;
+let countdownRemaining = 0;
+let countdownPaused = false;
+const AUTO_ADVANCE_SECONDS = 5;
 
 function loadStats() {
   try {
@@ -80,6 +82,7 @@ function scenarioDescription(scenario) {
 
 function newQuestion() {
   clearInterval(countdownTimer);
+  countdownPaused = false;
   state.locked = false;
   document.getElementById('feedback').classList.add('hidden');
   document.querySelectorAll('.action-btn').forEach((b) => { b.disabled = false; });
@@ -121,33 +124,56 @@ function handleAction(action) {
   fb.classList.remove('hidden');
   fb.classList.toggle('correct', isCorrect);
   fb.classList.toggle('incorrect', !isCorrect);
+  const { key, percentile } = state.current;
   fb.innerHTML = (isCorrect
     ? `<div class="fb-result">정답입니다! ✅</div><div class="fb-reason">${correct.reason}</div>`
     : `<div class="fb-result">오답입니다 ❌ (정답: ${ACTION_LABEL[correct.action]})</div><div class="fb-reason">${correct.reason}</div>`)
-    + `<div class="fb-footer"><span id="fbCountdown"></span><button id="nextBtn" type="button">다음 문제 →</button></div>`;
+    + `<div class="fb-percentile">내 핸드 ${key} — 상위 ${percentile.toFixed(1)}%</div>`
+    + `<div class="fb-guideline">${correct.guideline}</div>`
+    + `<div class="fb-footer"><span id="fbCountdown"></span><button id="pauseBtn" type="button">일시정지 ⏸</button><button id="nextBtn" type="button">다음 문제 →</button></div>`;
 
   document.getElementById('nextBtn').addEventListener('click', (e) => {
     e.stopPropagation();
     advanceNow();
   });
+  document.getElementById('pauseBtn').addEventListener('click', togglePause);
 
   startCountdown();
 }
 
-function startCountdown() {
-  let remaining = AUTO_ADVANCE_SECONDS;
+function renderCountdown() {
   const el = document.getElementById('fbCountdown');
-  const render = () => { el.textContent = `${remaining}초 후 다음 문제`; };
-  render();
+  if (el) el.textContent = countdownPaused ? '일시정지됨' : `${countdownRemaining}초 후 다음 문제`;
+}
+
+function tickCountdown() {
+  countdownRemaining -= 1;
+  if (countdownRemaining <= 0) {
+    newQuestion();
+    return;
+  }
+  renderCountdown();
+}
+
+function startCountdown() {
+  countdownRemaining = AUTO_ADVANCE_SECONDS;
+  countdownPaused = false;
+  renderCountdown();
   clearInterval(countdownTimer);
-  countdownTimer = setInterval(() => {
-    remaining -= 1;
-    if (remaining <= 0) {
-      newQuestion();
-      return;
-    }
-    render();
-  }, 1000);
+  countdownTimer = setInterval(tickCountdown, 1000);
+}
+
+function togglePause(e) {
+  e.stopPropagation();
+  countdownPaused = !countdownPaused;
+  if (countdownPaused) {
+    clearInterval(countdownTimer);
+  } else {
+    countdownTimer = setInterval(tickCountdown, 1000);
+  }
+  renderCountdown();
+  const btn = document.getElementById('pauseBtn');
+  if (btn) btn.textContent = countdownPaused ? '계속 ▶' : '일시정지 ⏸';
 }
 
 function advanceNow() {

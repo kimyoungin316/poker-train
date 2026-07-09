@@ -180,21 +180,23 @@ function generateScenario(tableSize, allowOpen, allowFacing) {
 function decideCorrectAction(scenario, percentile, handKey) {
   if (scenario.type === 'open') {
     const rfi = getEffectiveRFI(scenario.tableSize, scenario.heroPos);
+    const guideline = `${POS_LABEL[scenario.heroPos]} 행동지침 — 상위 ${rfi}% 이내: 레이즈 / 그 외: 폴드`;
     if (percentile <= rfi) {
-      return { action: 'raise', reason: `${POS_LABEL[scenario.heroPos]} 오픈 레인지: 상위 ${rfi}% 이내 → 레이즈 (${handKey})` };
+      return { action: 'raise', reason: `${POS_LABEL[scenario.heroPos]} 오픈 레인지 상위 ${rfi}% 이내 → 레이즈`, guideline };
     }
-    return { action: 'fold', reason: `${POS_LABEL[scenario.heroPos]} 오픈 레인지: 상위 ${rfi}% 밖 → 폴드 (${handKey})` };
+    return { action: 'fold', reason: `${POS_LABEL[scenario.heroPos]} 오픈 레인지 상위 ${rfi}% 밖 → 폴드`, guideline };
   }
 
   const { continuePct, threeBetShare } = getDefendParams(scenario.tableSize, scenario.openerPos, scenario.heroPos);
-  if (percentile > continuePct) {
-    return { action: 'fold', reason: `${POS_LABEL[scenario.openerPos]} 오픈 대비 대응 레인지(상위 ${continuePct}%) 밖 → 폴드 (${handKey})` };
-  }
   const nThreeBet = continuePct * threeBetShare / 100;
   const valueCutoff = nThreeBet * 0.6;
+  const guideline = `${POS_LABEL[scenario.openerPos]} 오픈 대비 ${POS_LABEL[scenario.heroPos]} 행동지침 — 상위 ${valueCutoff.toFixed(1)}% 이내: 3벳(밸류) / 블러프 후보 핸드는 상위 ${continuePct}%까지 3벳 가능 / 상위 ${continuePct}% 이내: 콜 / 그 외: 폴드`;
+  if (percentile > continuePct) {
+    return { action: 'fold', reason: `${POS_LABEL[scenario.openerPos]} 오픈 대비 대응 레인지(상위 ${continuePct}%) 밖 → 폴드`, guideline };
+  }
   const isBluff = BLUFF_POOL.includes(handKey);
   if (percentile <= valueCutoff || (isBluff && percentile <= continuePct)) {
-    return { action: 'raise', reason: `${POS_LABEL[scenario.openerPos]} 오픈 대비 3벳 레인지 → 레이즈 (${handKey})` };
+    return { action: 'raise', reason: `${POS_LABEL[scenario.openerPos]} 오픈 대비 3벳 레인지 → 레이즈`, guideline };
   }
-  return { action: 'call', reason: `${POS_LABEL[scenario.openerPos]} 오픈 대비 콜 레인지 → 콜 (${handKey})` };
+  return { action: 'call', reason: `${POS_LABEL[scenario.openerPos]} 오픈 대비 콜 레인지 → 콜`, guideline };
 }
