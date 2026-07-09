@@ -180,7 +180,7 @@ function generateScenario(tableSize, allowOpen, allowFacing) {
 function decideCorrectAction(scenario, percentile, handKey) {
   if (scenario.type === 'open') {
     const rfi = getEffectiveRFI(scenario.tableSize, scenario.heroPos);
-    const guideline = `행동지침(폴드,콜,벳)— 100% , 0% , ${rfi}%`;
+    const guideline = `행동지침(폴드,콜,벳)— 100% , -- , ${rfi}%`;
     if (percentile <= rfi) {
       return { action: 'raise', reason: `${POS_LABEL[scenario.heroPos]} 오픈 레인지 상위 ${rfi}% 이내 → 레이즈`, guideline };
     }
